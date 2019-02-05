@@ -1,26 +1,18 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const port = process.env.PORT || 5000;
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/messages', (req, res) => {
-  Message.find({},(err, messages)=> {
-    res.send(messages);
-  })
-})
+app.get('/api/hello', (req, res) => {
+  res.send({ express: 'Hello From Express' });
+});
+app.post('/api/world', (req, res) => {
+  console.log(req.body);
+  res.send(
+    `I received your POST request. This is what you sent me: ${req.body.post}`,
+  );
+});
 
-app.post('/messages', (req, res) => {
-  var message = new Message(req.body);
-  message.save((err) =>{
-    if(err)
-      sendStatus(500);
-    res.sendStatus(200);
-  })
-})
-
-
-app.post('/messages', (req, res) => {
-  var message = new Message(req.body);
-  message.save((err) =>{
-    if(err)
-      sendStatus(500);
-    io.emit('message', req.body);
-    res.sendStatus(200);
-  })
-})
+app.listen(port, () => console.log(`Listening on port ${port}`));
